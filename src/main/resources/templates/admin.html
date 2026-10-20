@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+</head>
+<body>
+<div th:replace="~{menu :: menu}"></div>
+<hr>
+<h1>Admin page</h1>
+<p>This page can only be seen by ADMIN.</p>
+<p>Admin: <strong sec:authentication="name"></strong></p>
+</body>
+</html>
