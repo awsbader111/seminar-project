@@ -34,16 +34,12 @@ public class WebSecurityConfig {
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
         return (request, response, authentication) -> {
-            boolean isAdmin = authentication
-                    .getAuthorities()
-                    .stream()
-                    .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+            boolean isAdmin = authentication.getAuthorities().stream()
+                    .anyMatch(authority ->
+                            authority.getAuthority().equals("ROLE_ADMIN"));
 
-            if (isAdmin) {
-                response.sendRedirect("/admin");
-            } else {
-                response.sendRedirect("/user");
-            }
+            String destination = isAdmin ? "/admin" : "/user";
+            response.sendRedirect(request.getContextPath() + destination);
         };
     }
 
@@ -52,10 +48,19 @@ public class WebSecurityConfig {
         http
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/register", "/login", "/css/**", "/js/**")
-                        .permitAll()
+                        .requestMatchers(
+                                "/",
+                                "/register",
+                                "/login",
+                                "/database",
+                                "/contact",
+                                "/chart",
+                                "/css/**",
+                                "/js/**"
+                        ).permitAll()
                         .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/messages").authenticated()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -70,17 +75,20 @@ public class WebSecurityConfig {
                 .exceptionHandling(exception -> exception
                         .defaultAuthenticationEntryPointFor(
                                 (request, response, authException) ->
-                                        response.sendRedirect("/login"),
-                                request -> request.getRequestURI().equals("/user")
+                                        response.sendRedirect(
+                                                request.getContextPath() + "/login"),
+                                request -> request.getServletPath().equals("/user")
                         )
                         .defaultAuthenticationEntryPointFor(
                                 (request, response, authException) ->
-                                        response.sendRedirect("/"),
-                                request -> request.getRequestURI().equals("/admin")
+                                        response.sendRedirect(
+                                                request.getContextPath() + "/"),
+                                request -> request.getServletPath().equals("/admin")
                         )
                         .accessDeniedHandler(
                                 (request, response, accessDeniedException) ->
-                                        response.sendRedirect("/")
+                                        response.sendRedirect(
+                                                request.getContextPath() + "/")
                         )
                 );
 

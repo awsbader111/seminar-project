@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pizza Database</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 24px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #eee;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <a th:href="@{/}">Home</a> |
+    <a th:href="@{/database}">Database</a>
+</nav>
+
+<h1>Pizza orders</h1>
+<p>Showing the first 50 orders, ordered by ID.</p>
+
+<p th:if="${#lists.isEmpty(orders)}">No orders found.</p>
+
+<div class="table-container" th:unless="${#lists.isEmpty(orders)}">
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Pizza</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Vegetarian</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th>Taken</th>
+            <th>Dispatched</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id}"></td>
+            <td th:text="${order.pizza.pname}"></td>
+            <td th:text="${order.pizza.category.cname}"></td>
+            <td th:text="${order.pizza.category.price}"></td>
+            <td th:text="${order.pizza.vegetarian ? 'Yes' : 'No'}"></td>
+            <td th:text="${order.amount}"></td>
+            <td th:text="${order.amount * order.pizza.category.price}"></td>
+            <td th:text="${order.taken}"></td>
+            <td th:text="${order.dispatched}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
