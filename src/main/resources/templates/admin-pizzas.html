@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Manage Pizzas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 24px;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: #eee;
+        }
+        .success {
+            color: #166534;
+        }
+        .error {
+            color: #b00020;
+        }
+        .delete-form {
+            display: inline;
+            margin-left: 12px;
+        }
+    </style>
+</head>
+<body>
+<nav th:replace="~{menu :: menu}"></nav>
+
+<h1>Manage pizzas</h1>
+
+<p class="success" th:if="${success}" th:text="${success}"></p>
+<p class="error" th:if="${error}" th:text="${error}"></p>
+
+<p><a th:href="@{/admin/pizzas/new}">Add pizza</a></p>
+
+<p th:if="${#lists.isEmpty(pizzas)}">No pizzas found.</p>
+
+<div class="table-container" th:unless="${#lists.isEmpty(pizzas)}">
+    <table>
+        <thead>
+        <tr>
+            <th>Pizza</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Vegetarian</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="pizza : ${pizzas}">
+            <td th:text="${pizza.pname}"></td>
+            <td th:text="${pizza.category.cname}"></td>
+            <td th:text="${pizza.category.price}"></td>
+            <td th:text="${pizza.vegetarian ? 'Yes' : 'No'}"></td>
+            <td>
+                <a th:href="@{/admin/pizzas/edit(name=${pizza.pname})}">
+                    Edit
+                </a>
+                <form class="delete-form"
+                      th:action="@{/admin/pizzas/delete}"
+                      method="post"
+                      onsubmit="return confirm('Delete this pizza?');">
+                    <input type="hidden" name="name"
+                           th:value="${pizza.pname}">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

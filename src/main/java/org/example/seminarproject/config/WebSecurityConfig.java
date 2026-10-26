@@ -3,7 +3,9 @@ package org.example.seminarproject.config;
 import org.example.seminarproject.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,25 +46,25 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)
+            throws Exception {
         http
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/",
-                                "/register",
-                                "/login",
-                                "/database",
-                                "/contact",
-                                "/chart",
-                                "/css/**",
-                                "/js/**"
+                                "/", "/register", "/login",
+                                "/database", "/contact", "/chart",
+                                "/css/**", "/js/**"
                         ).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/**")
+                        .authenticated()
+                        .requestMatchers("/api/**").hasRole("ADMIN")
                         .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
                         .requestMatchers("/messages").authenticated()
                         .anyRequest().authenticated()
                 )
+                .httpBasic(Customizer.withDefaults())
                 .formLogin(form -> form
                         .loginPage("/login")
                         .successHandler(authenticationSuccessHandler())
@@ -75,6 +77,12 @@ public class WebSecurityConfig {
                 .exceptionHandling(exception -> exception
                         .defaultAuthenticationEntryPointFor(
                                 (request, response, authException) ->
+                                        response.sendError(401),
+                                request -> request.getServletPath()
+                                        .startsWith("/api/")
+                        )
+                        .defaultAuthenticationEntryPointFor(
+                                (request, response, authException) ->
                                         response.sendRedirect(
                                                 request.getContextPath() + "/login"),
                                 request -> request.getServletPath().equals("/user")
@@ -85,11 +93,14 @@ public class WebSecurityConfig {
                                                 request.getContextPath() + "/"),
                                 request -> request.getServletPath().equals("/admin")
                         )
-                        .accessDeniedHandler(
-                                (request, response, accessDeniedException) ->
-                                        response.sendRedirect(
-                                                request.getContextPath() + "/")
-                        )
+                        .accessDeniedHandler((request, response, exception1) -> {
+                            if (request.getServletPath().startsWith("/api/")) {
+                                response.sendError(403);
+                            } else {
+                                response.sendRedirect(
+                                        request.getContextPath() + "/");
+                            }
+                        })
                 );
 
         return http.build();

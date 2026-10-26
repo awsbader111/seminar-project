@@ -21,6 +21,7 @@
 
     <span sec:authorize="hasRole('ADMIN')">
         | <a th:href="@{/admin}">Admin</a>
+        | <a th:href="@{/admin/pizzas}">Manage pizzas</a>
     </span>
 
     <span sec:authorize="isAuthenticated()">
