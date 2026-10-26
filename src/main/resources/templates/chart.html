@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pizza Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 24px;
+        }
+        .chart-container {
+            position: relative;
+            max-width: 900px;
+            height: 450px;
+        }
+    </style>
+</head>
+<body>
+<nav th:replace="~{menu :: menu}"></nav>
+
+<h1>Pizza quantities by category</h1>
+<p>Total number of pizzas ordered in each category.</p>
+
+<p th:if="${#lists.isEmpty(categories)}">No order data available.</p>
+
+<div class="chart-container" th:unless="${#lists.isEmpty(categories)}">
+    <canvas id="pizzaChart" role="img"
+            aria-label="Bar chart of pizza quantities ordered by category">
+        Pizza quantities ordered by category.
+    </canvas>
+</div>
+
+<script th:inline="javascript">
+    const categories = /*[[${categories}]]*/ [];
+    const quantities = /*[[${quantities}]]*/ [];
+    const canvas = document.getElementById('pizzaChart');
+
+    if (canvas) {
+        new Chart(canvas, {
+            type: 'bar',
+            data: {
+                labels: categories,
+                datasets: [{
+                    label: 'Pizzas ordered',
+                    data: quantities,
+                    backgroundColor: '#4285f4',
+                    borderColor: '#2459b3',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Quantity'
+                        },
+                        ticks: {
+                            precision: 0
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Category'
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
