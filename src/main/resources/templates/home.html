@@ -1,16 +1,74 @@
+
+
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+    <title>Home - Pizza Seminar Project</title>
 </head>
 <body>
+
 <div th:replace="~{menu :: menu}"></div>
-<hr>
-<h1>Home page</h1>
-<div sec:authorize="isAuthenticated()">
-    <p>Logged in user: <strong sec:authentication="name"></strong></p>
-</div>
+
+<main class="container py-5">
+
+    <section class="text-center mb-5">
+        <h1 class="display-5 fw-bold">
+            Welcome to Our Pizza Project
+        </h1>
+        <p class="lead">
+            Discover pizza categories, explore order statistics,
+            and interact with our Spring Boot REST API.
+        </p>
+    </section>
+
+    <section class="row g-4">
+
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h2 class="h4">Pizza Database</h2>
+                    <p>Explore pizzas, categories and orders.</p>
+                    <a th:href="@{/database}"
+                       class="btn btn-primary">
+                        View Database
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h2 class="h4">Order Statistics</h2>
+                    <p>View pizza quantities grouped by category.</p>
+                    <a th:href="@{/chart}"
+                       class="btn btn-primary">
+                        View Chart
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+
+    </section>
+
+    <section sec:authorize="isAuthenticated()"
+             class="text-center mt-5">
+        <p>
+            Logged in as:
+            <strong sec:authentication="name"></strong>
+        </p>
+    </section>
+
+</main>
+
+<div th:replace="~{footer :: footer}"></div>
+
 </body>
 </html>
