@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pizza Orders Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div th:replace="~{menu :: menu}"></div>
+
+<h1>Pizza Orders by Category</h1>
+<p>Total quantity of pizzas ordered in each category.</p>
+
+<div style="max-width: 850px; width: 95%; margin: 30px auto;">
+    <canvas id="pizzaChart"></canvas>
+</div>
+
+<script th:inline="javascript">
+    const categories = /*[[${categories}]]*/ [];
+    const quantities = /*[[${quantities}]]*/ [];
+
+    new Chart(document.getElementById('pizzaChart'), {
+        type: 'bar',
+        data: {
+            labels: categories,
+            datasets: [{
+                label: 'Total Pizzas Ordered',
+                data: quantities,
+                backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                borderColor: 'rgb(54, 162, 235)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+</script>
+<div th:replace="~{footer :: footer}"></div>
+</body>
+</html>

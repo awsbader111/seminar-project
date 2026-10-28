@@ -55,6 +55,7 @@ public class WebSecurityConfig {
                                 "/database",
                                 "/contact",
                                 "/chart",
+                                "/api/pizzas",
                                 "/css/**",
                                 "/js/**"
                         ).permitAll()

@@ -3,6 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>User</title>
 </head>
 <body>
@@ -11,5 +12,6 @@
 <h1>User page</h1>
 <p>This page can be seen by logged in users.</p>
 <p>Logged in: <strong sec:authentication="name"></strong></p>
+<div th:replace="~{footer :: footer}"></div>
 </body>
 </html>

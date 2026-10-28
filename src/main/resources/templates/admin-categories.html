@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Manage Pizza Categories</title>
+</head>
+<body>
+
+<div th:replace="~{menu :: menu}"></div>
+
+<h1>Manage Pizza Categories</h1>
+<p>Admin only: Add, view, update and delete categories.</p>
+
+<p th:if="${error}" th:text="${error}" style="color:red;"></p>
+
+<h2>Add New Category</h2>
+
+<form th:action="@{/admin/categories/add}" method="post">
+    <label>Category Name:</label>
+    <input type="text" name="cname" maxlength="50" required>
+
+    <label>Price:</label>
+    <input type="number" name="price" min="0" required>
+
+    <button type="submit">Add Category</button>
+</form>
+
+<hr>
+
+<h2>Existing Categories</h2>
+
+<table border="1" cellpadding="10" cellspacing="0">
+    <thead>
+    <tr>
+        <th>Category Name</th>
+        <th>Price</th>
+        <th>Update Price</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="category : ${categories}">
+        <td th:text="${category.cname}"></td>
+        <td th:text="${category.price}"></td>
+
+        <td>
+            <form th:action="@{/admin/categories/update}" method="post">
+                <input type="hidden" name="cname"
+                       th:value="${category.cname}">
+
+                <input type="number" name="price"
+                       th:value="${category.price}"
+                       min="0" required>
+
+                <button type="submit">Update</button>
+            </form>
+        </td>
+
+        <td>
+            <form th:action="@{/admin/categories/delete}"
+                  method="post"
+                  onsubmit="return confirm('Delete this category?');">
+
+                <input type="hidden" name="cname"
+                       th:value="${category.cname}">
+
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div th:replace="~{footer :: footer}"></div>
+</body>
+</html>
