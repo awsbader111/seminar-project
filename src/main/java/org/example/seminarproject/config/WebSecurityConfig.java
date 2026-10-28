@@ -1,5 +1,5 @@
 package org.example.seminarproject.config;
-
+import org.springframework.http.HttpMethod;
 import org.example.seminarproject.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,10 +55,12 @@ public class WebSecurityConfig {
                                 "/database",
                                 "/contact",
                                 "/chart",
-                                "/api/pizzas",
                                 "/css/**",
                                 "/js/**"
                         ).permitAll()
+                        .requestMatchers("/api/pizzas").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/**").authenticated()
+                        .requestMatchers("/api/**").hasRole("ADMIN")
                         .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
                         .requestMatchers("/messages").authenticated()

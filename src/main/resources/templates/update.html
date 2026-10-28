@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Update Pizza</title>
+</head>
+<body>
+<nav th:replace="~{menu :: menu}"></nav>
+
+<h1>Update pizza</h1>
+
+<form th:action="@{/admin/pizzas/update}"
+      th:object="${pizza}" method="post">
+    <input type="hidden" th:field="*{pname}">
+
+    <p>
+        Pizza name:
+        <strong th:text="*{pname}"></strong>
+    </p>
+    <p>
+        <label for="categoryName">Category</label>
+        <select id="categoryName" name="categoryName" required>
+            <option th:each="category : ${categories}"
+                    th:value="${category.cname}"
+                    th:text="${category.cname}"
+                    th:selected="${category.cname == pizza.category.cname}">
+            </option>
+        </select>
+    </p>
+    <p>
+        <input type="checkbox" th:field="*{vegetarian}">
+        <label for="vegetarian">Vegetarian</label>
+    </p>
+    <p><input type="submit" value="Update"></p>
+</form>
+
+<a th:href="@{/admin/pizzas}">Back to pizzas</a>
+</body>
+</html>
