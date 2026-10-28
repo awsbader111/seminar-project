@@ -3,32 +3,44 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
-<nav th:fragment="menu">
-    <a th:href="@{/}">Home</a>
-    | <a th:href="@{/database}">Database</a>
-    | <a th:href="@{/contact}">Contact</a>
 
-    <span sec:authorize="isAnonymous()">
-        | <a th:href="@{/register}">Register</a>
-        | <a th:href="@{/login}">Login</a>
-    </span>
+<div th:fragment="menu">
 
-    <span sec:authorize="isAuthenticated()">
-        | <a th:href="@{/user}">User</a>
-        | <a th:href="@{/messages}">Messages</a>
-    </span>
+    <!-- Responsive Bootstrap theme -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.8/dist/flatly/bootstrap.min.css">
 
-    <span sec:authorize="hasRole('ADMIN')">
-        | <a th:href="@{/admin}">Admin</a>
-    </span>
+    <!-- Our custom styles -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 
-    <span sec:authorize="isAuthenticated()">
-        |
-        <form th:action="@{/logout}" method="post"
-              style="display: inline;">
-            <button type="submit">Logout</button>
-        </form>
-    </span>
-</nav>
+    <nav>
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/database}">Database</a>
+        <a th:href="@{/chart}">Chart</a>
+        <a th:href="@{/contact}">Contact</a>
+
+        <span sec:authorize="isAnonymous()">
+            <a th:href="@{/register}">Register</a>
+            <a th:href="@{/login}">Login</a>
+        </span>
+
+        <span sec:authorize="isAuthenticated()">
+            <a th:href="@{/user}">User</a>
+            <a th:href="@{/messages}">Messages</a>
+        </span>
+
+        <span sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/admin}">Admin</a>
+        </span>
+
+        <span sec:authorize="isAuthenticated()">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit">Logout</button>
+            </form>
+        </span>
+    </nav>
+
+</div>
+
 </body>
 </html>
